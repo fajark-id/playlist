@@ -31,13 +31,13 @@ const PLAYLISTS = [
   const nextBtn = document.getElementById("nextBtn");
 
   const n = PLAYLISTS.length;
-  // IMPROVEMENT 3: Default diubah ke index 0 (Beatology) bukan ke nilai tengah
-  let activeIndex = 0;
+  let activeIndex = 0; // Default diatur ke index 0 (Beatology)
 
   function getConfig() {
     const w = window.innerWidth;
     if (w <= 520) {
-      return { size: 150, offset: 68, step: 40, angle: 32, depth: 34, maxVisible: 2 };
+      // Sedikit di-tweak untuk HP agar spasi cover lebih rapi (berdasarkan screenshot)
+      return { size: 160, offset: 75, step: 45, angle: 35, depth: 35, maxVisible: 2 };
     } else if (w <= 860) {
       return { size: 205, offset: 100, step: 58, angle: 38, depth: 40, maxVisible: 3 };
     }
@@ -88,27 +88,34 @@ const PLAYLISTS = [
       el.style.marginLeft = -cfg.size / 2 + "px";
       el.style.marginTop = -cfg.size / 2 + "px";
 
-      let tx, tz, rot, scale, opacityValue;
+      let tx, tz, rot, scale, overlayOp;
       if (isActive) {
         tx = 0; tz = 40; rot = 0; scale = 1;
-        opacityValue = 1;
+        overlayOp = 0; // Cover tengah terang sepenuhnya
       } else {
         tx = sign * (cfg.offset + (abs - 1) * cfg.step);
         tz = -cfg.depth * abs;
         rot = -sign * cfg.angle;
         scale = Math.max(0.5, 1 - abs * 0.14);
-        // IMPROVEMENT 2: Menggunakan visual opacity tingkat keredupan layer (lebih ringan dari manipulasi filter brightness GPU)
-        opacityValue = Math.max(0.2, 1 - abs * 0.25);
+        
+        // Menambahkan opacity (kegelapan) berdasarkan jarak dari cover tengah. max 75% gelap.
+        overlayOp = Math.min(0.75, abs * 0.25); 
       }
 
       const visible = abs <= cfg.maxVisible;
 
-      // Render transform-3d yang ramah untuk iOS Safari engine
+      // Transformasi ruang 3D
       el.style.transform = "translate3d(" + tx + "px, 0, " + tz + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
-      el.style.opacity = visible ? opacityValue : 0;
       el.style.zIndex = (100 - abs).toString();
       el.style.pointerEvents = visible ? "auto" : "none";
       el.classList.toggle("active", isActive);
+
+      // Selama masuk dalam maxVisible, cover 100% TIDAK TRANSPARAN (bisa dilihat).
+      // Cover yang diluar maxVisible disembunyikan sepenuhnya (opacity 0) agar tidak memberatkan DOM.
+      el.style.opacity = visible ? 1 : 0;
+      
+      // Inject nilai variabel CSS untuk mengontrol overlay hitam
+      el.style.setProperty('--overlay-op', overlayOp);
     });
 
     openLink.href = PLAYLISTS[activeIndex].link;
@@ -154,7 +161,8 @@ const PLAYLISTS = [
   window.addEventListener("pointerup", (e) => {
     if (dragStartX === null) return;
     const delta = e.clientX - dragStartX;
-    if (axisLock !== "y" && Math.abs(delta) > 40) {
+    // Ambang batas swipe dikurangi (dari 40 -> 30) agar lebih peka di HP
+    if (axisLock !== "y" && Math.abs(delta) > 30) {
       delta > 0 ? prev() : next();
     }
     dragStartX = null;
@@ -167,10 +175,12 @@ const PLAYLISTS = [
     e.preventDefault();
     if (wheelLocked) return;
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (Math.abs(delta) < 8) return;
+    // Sensitivitas scroll mouse diringankan (dari 8 -> 5)
+    if (Math.abs(delta) < 5) return; 
     delta > 0 ? next() : prev();
     wheelLocked = true;
-    setTimeout(() => { wheelLocked = false; }, 250); // Dipercepat dari 380ms ke 250ms agar swipe terasa snappy
+    // Lock delay dipersingkat agar lebih responsif jika user scroll cepat
+    setTimeout(() => { wheelLocked = false; }, 200); 
   }, { passive: false });
 
   let resizeTimer = null;
