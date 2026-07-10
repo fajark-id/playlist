@@ -11,16 +11,27 @@
         - Atau URL gambar online: "https://.../gambar.jpg"
    2. Ganti nilai "link" dengan URL playlist kamu
       (Spotify, YouTube Music, Apple Music, dsb).
-   3. "title" tidak ditampilkan di halaman (judul playlist disembunyikan),
-      tapi tetap dipakai untuk teks aksesibilitas (alt gambar & label titik).
-   4. Boleh tambah atau kurangi jumlah item — cukup tambah/hapus objek
-      di dalam array.
+   3. "title" tidak ditampilkan di halaman, tapi tetap dipakai
+      untuk teks aksesibilitas (alt gambar).
+   4. Boleh tambah atau kurangi jumlah item — cukup tambah/hapus
+      objek di dalam array.
+
+   NAVIGASI YANG DIDUKUNG
+   -----------------------
+   - Tombol panah kiri/kanan
+   - Klik sampul di samping
+   - Klik sampul aktif di tengah -> buka link playlist
+   - Swipe / drag (mouse & touch, dengan axis-lock supaya swipe
+     horizontal di HP tidak bentrok dengan scroll vertikal)
+   - Scroll wheel & gesture dua-jari trackpad, saat kursor
+     berada di atas area coverflow
+   - Tombol panah kiri/kanan di keyboard
    ========================================================= */
 
 const PLAYLISTS = [
   { title: "Beatology", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd7q3i1dkOrfemfXD_wyti7H/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgiPkOnJBg&rs=AMzJL3kKir2o1CzEbHInRIZnTRfL3nsbMg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd7q3i1dkOrfemfXD_wyti7H&si=sHv7aqSaFDIWQKXK" },
   { title: "Blus", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd7yJBv_a3KcMIAbQKu6s4N9/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjgkOnJBg&rs=AMzJL3n3v-_uZaCoLE6bgcaPwwm4Rw2WFQ", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd7yJBv_a3KcMIAbQKu6s4N9&si=k7OjJxbVJfRQ6hnU" },
-  { title: "Campur Es", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd5JY8KUFKlyknmTUMiQpRx1/studio_square_thumbnail.jpg?sqp=CKnYwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgj3kenJBg&rs=AMzJL3knjW2ztwJFgWhkSS-AqfXGtBeyDQ", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5JY8KUFKlyknmTUMiQpRx1&si=YmmMtYooJKVH8DBm" },
+  { title: "Campur Es", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd4Kwy0uD1d4rZlrJM8mQwvZ/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjepOnJBg&rs=AMzJL3kVTlddjFfTeiOw0OiNN1j8RYqQxg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5JY8KUFKlyknmTUMiQpRx1&si=YmmMtYooJKVH8DBm" },
   { title: "Classick", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd5WpepxMrcHLKarqaTQHxJB/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjBkenJBg&rs=AMzJL3l0fHAZ23Yx0Kl7qjs5te8A007Ucw", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5WpepxMrcHLKarqaTQHxJB&si=wDZcjxJJnR-ChOSC" },
   { title: "Danska", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd5g4bVacOSw-3HvYfGaR6Be/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgiskunJBg&rs=AMzJL3lqDwJ0AwvDPMrX9btbeURXXctfTA", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5g4bVacOSw-3HvYfGaR6Be&si=oW624Xs8vNBGcszX" },
   { title: "Indienesia", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd6ZHlgAazpmajE-0LkP07G8/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgj3kunJBg&rs=AMzJL3khWQsdpaigiuuMpb6Gx9Lf1ZKSDg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd6ZHlgAazpmajE-0LkP07G8&si=5AzVX20ZfMoTJdSS" },
@@ -40,9 +51,10 @@ const PLAYLISTS = [
 
 (function () {
   const track = document.getElementById("coverflowTrack");
-  const dotsWrap = document.getElementById("dots");
   const openLink = document.getElementById("openLink");
   const stage = document.getElementById("coverflowStage");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
 
   const n = PLAYLISTS.length;
   let activeIndex = Math.floor(n / 2);
@@ -81,17 +93,7 @@ const PLAYLISTS = [
     });
 
     track.appendChild(el);
-    return el;
-  });
-
-  // --- build dots once ---
-  const dots = PLAYLISTS.map((pl, i) => {
-    const b = document.createElement("button");
-    b.className = "dot";
-    b.setAttribute("aria-label", "Ke " + pl.title);
-    b.addEventListener("click", () => goTo(i));
-    dotsWrap.appendChild(b);
-    return b;
+    return { el, img };
   });
 
   function circularDiff(i, active) {
@@ -102,36 +104,43 @@ const PLAYLISTS = [
   }
 
   function render() {
-    items.forEach((el, i) => {
+    items.forEach(({ el, img }, i) => {
       const diff = circularDiff(i, activeIndex);
       const abs = Math.abs(diff);
       const sign = Math.sign(diff);
+      const isActive = diff === 0;
 
       el.style.width = cfg.size + "px";
       el.style.height = cfg.size + "px";
       el.style.marginLeft = -cfg.size / 2 + "px";
       el.style.marginTop = -cfg.size / 2 + "px";
 
-      let tx, tz, rot, scale, opacity;
-      if (diff === 0) {
-        tx = 0; tz = 40; rot = 0; scale = 1; opacity = 1;
+      let tx, tz, rot, scale, brightness, saturate;
+      if (isActive) {
+        tx = 0; tz = 40; rot = 0; scale = 1;
+        brightness = 1; saturate = 1;
       } else {
         tx = sign * (cfg.offset + (abs - 1) * cfg.step);
         tz = -cfg.depth * abs;
         rot = -sign * cfg.angle;
         scale = Math.max(0.5, 1 - abs * 0.14);
-        opacity = abs > cfg.maxVisible ? 0 : Math.max(0.12, 1 - abs * 0.24);
+        // sampul di samping dibuat lebih GELAP seiring jaraknya dari tengah,
+        // bukan transparan -> tetap penuh (opacity 1), hanya redup.
+        brightness = Math.max(0.15, 1 - abs * 0.22);
+        saturate = Math.max(0.35, 1 - abs * 0.15);
       }
+
+      // item yang terlalu jauh dari tengah disembunyikan sepenuhnya
+      const visible = abs <= cfg.maxVisible;
 
       el.style.transform =
         "translate3d(" + tx + "px,0," + tz + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
-      el.style.opacity = opacity;
+      el.style.opacity = visible ? 1 : 0;
       el.style.zIndex = 100 - abs;
-      el.style.pointerEvents = abs > cfg.maxVisible + 1 ? "none" : "auto";
-      el.classList.toggle("active", diff === 0);
+      el.style.pointerEvents = visible ? "auto" : "none";
+      el.classList.toggle("active", isActive);
+      img.style.filter = "brightness(" + brightness + ") saturate(" + saturate + ")";
     });
-
-    dots.forEach((d, i) => d.classList.toggle("active", i === activeIndex));
 
     openLink.href = PLAYLISTS[activeIndex].link;
   }
@@ -144,25 +153,62 @@ const PLAYLISTS = [
   function next() { goTo(activeIndex + 1); }
   function prev() { goTo(activeIndex - 1); }
 
-  // --- keyboard navigation (opsional, tombol panah fisik di keyboard) ---
+  prevBtn.addEventListener("click", prev);
+  nextBtn.addEventListener("click", next);
+
+  // --- keyboard navigation ---
   window.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") prev();
     if (e.key === "ArrowRight") next();
   });
 
-  // --- swipe / drag navigation (mouse & touch) ---
+  // --- swipe / drag navigation (mouse & touch) dengan axis-lock ---
+  // axis-lock: begitu gerakan horizontal terdeteksi lebih dulu, kunci
+  // gestur sebagai swipe horizontal dan cegah browser ikut scroll vertikal.
+  // Kalau gerakan vertikal lebih dulu, biarkan scroll halaman berjalan normal.
   let dragStartX = null;
+  let dragStartY = null;
+  let axisLock = null; // 'x' | 'y' | null
+
   stage.addEventListener("pointerdown", (e) => {
     dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    axisLock = null;
   });
+
+  stage.addEventListener("touchmove", (e) => {
+    if (dragStartX === null) return;
+    const t = e.touches[0];
+    const dx = t.clientX - dragStartX;
+    const dy = t.clientY - dragStartY;
+    if (axisLock === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+      axisLock = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+    }
+    if (axisLock === "x") e.preventDefault();
+  }, { passive: false });
+
   window.addEventListener("pointerup", (e) => {
     if (dragStartX === null) return;
     const delta = e.clientX - dragStartX;
-    if (Math.abs(delta) > 40) {
+    if (axisLock !== "y" && Math.abs(delta) > 40) {
       delta > 0 ? prev() : next();
     }
     dragStartX = null;
+    dragStartY = null;
+    axisLock = null;
   });
+
+  // --- scroll wheel & gesture trackpad (dua jari) ---
+  let wheelLocked = false;
+  stage.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    if (wheelLocked) return;
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (Math.abs(delta) < 8) return;
+    delta > 0 ? next() : prev();
+    wheelLocked = true;
+    setTimeout(() => { wheelLocked = false; }, 380);
+  }, { passive: false });
 
   // --- resize handling ---
   let resizeTimer = null;
