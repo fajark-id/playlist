@@ -9,11 +9,11 @@
 :root{
   --bg-1: #16171b;
   --bg-2: #0b0c0e;
-  --panel: rgba(255,255,255,0.05);
-  --panel-border: rgba(255,255,255,0.09);
+  --panel: rgba(255,255,255,0.06);
+  --panel-border: rgba(255,255,255,0.1);
   --text: #f3f2ef;
   --text-dim: #9a9aa2;
-  --accent: #ff6a2c;      /* aksen oranye untuk tombol & titik aktif */
+  --accent: #ff6a2c;      /* aksen oranye untuk tombol & elemen aktif */
   --accent-soft: rgba(255,106,44,0.35);
   --dot-red: #ff3b3b;      /* titik merah di judul "Playlist." */
   --radius: 12px;
@@ -25,8 +25,13 @@
 html, body{
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
   background: var(--bg-1);
+  /* sembunyikan scrollbar secara visual, scroll tetap berfungsi sebagai fallback */
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* Edge lama */
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar{
+  display: none;                 /* Chrome / Safari */
 }
 
 body{
@@ -71,15 +76,44 @@ body{
   line-height: 1.6;
 }
 
-/* ---------- Coverflow wrapper ---------- */
+/* ---------- Coverflow wrapper + nav buttons ---------- */
 
 .coverflow-wrap{
+  position: relative;
   width: 100%;
   max-width: 1120px;
+}
+
+.nav-btn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
 }
+
+.nav-prev{ left: 2px; }
+.nav-next{ right: 2px; }
+
+.nav-btn:hover{
+  background: rgba(255,106,44,0.18);
+  border-color: var(--accent-soft);
+}
+
+.nav-btn:active{ transform: translateY(-50%) scale(0.92); }
+.nav-btn svg{ width: 20px; height: 20px; }
 
 /* ---------- Stage (3D perspective area) ---------- */
 
@@ -112,9 +146,8 @@ body{
   box-shadow: 0 18px 40px rgba(0,0,0,0.55);
   transition: transform 0.55s cubic-bezier(0.22,0.68,0,1.05),
               opacity 0.5s ease,
-              box-shadow 0.4s ease,
-              filter 0.4s ease;
-  will-change: transform, opacity;
+              box-shadow 0.4s ease;
+  will-change: transform;
 }
 
 .cover-item img{
@@ -122,25 +155,12 @@ body{
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.55) saturate(0.85);
   transition: filter 0.4s ease;
   -webkit-box-reflect: below 6px linear-gradient(to bottom, transparent 0%, transparent 55%, rgba(255,255,255,0.14) 100%);
 }
 
 .cover-item.active{
   box-shadow: 0 26px 60px -8px var(--accent-soft), 0 14px 34px rgba(0,0,0,0.6);
-}
-
-.cover-item.active img{
-  filter: brightness(1) saturate(1);
-}
-
-.cover-item:hover img{
-  filter: brightness(0.8) saturate(1);
-}
-
-.cover-item.active:hover img{
-  filter: brightness(1.05) saturate(1.05);
 }
 
 /* ---------- Buka playlist ---------- */
@@ -163,43 +183,20 @@ body{
 .open-link:hover{ transform: translateY(-2px); }
 .open-link svg{ width: 16px; height: 16px; }
 
-/* ---------- Dots ---------- */
-
-.dots{
-  display: flex;
-  gap: 7px;
-  max-width: 90vw;
-  overflow-x: auto;
-  padding: 4px 2px;
-  scrollbar-width: none;
-}
-.dots::-webkit-scrollbar{ display: none; }
-
-.dot{
-  flex: 0 0 auto;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.22);
-  cursor: pointer;
-  transition: width 0.3s ease, background 0.3s ease;
-}
-
-.dot.active{
-  width: 22px;
-  border-radius: 4px;
-  background: var(--accent);
-}
-
 /* ---------- Responsive breakpoints ---------- */
 
 @media (max-width: 860px){
   :root{ --stage-height: 320px; }
+  .nav-btn{ width: 38px; height: 38px; }
+  .nav-btn svg{ width: 17px; height: 17px; }
 }
 
 @media (max-width: 520px){
   :root{ --stage-height: 250px; }
   body{ padding: 32px 12px 44px; gap: 20px; }
+  .nav-btn{ width: 32px; height: 32px; left: 0; right: 0; }
+  .nav-prev{ left: -2px; }
+  .nav-next{ right: -2px; }
+  .nav-btn svg{ width: 15px; height: 15px; }
   .open-link{ padding: 9px 16px; font-size: 13px; }
 }
