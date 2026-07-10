@@ -14,17 +14,23 @@
   </header>
 
   <div class="coverflow-wrap">
+    <button class="nav-btn nav-prev" id="prevBtn" aria-label="Sebelumnya">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
     <div class="coverflow-stage" id="coverflowStage">
       <div class="coverflow-track" id="coverflowTrack"></div>
     </div>
+
+    <button class="nav-btn nav-next" id="nextBtn" aria-label="Berikutnya">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
   </div>
 
   <a class="open-link" id="openLink" href="#" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H8M17 7v9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     Buka playlist
   </a>
-
-  <div class="dots" id="dots"></div>
 
   <script src="script.js"></script>
 </body>
