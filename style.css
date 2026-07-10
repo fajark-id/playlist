@@ -13,8 +13,9 @@
   --panel-border: rgba(255,255,255,0.09);
   --text: #f3f2ef;
   --text-dim: #9a9aa2;
-  --accent: #ff6a2c;      /* aksen oranye, senada sampul "Flower Boy" di referensi */
+  --accent: #ff6a2c;      /* aksen oranye untuk tombol & titik aktif */
   --accent-soft: rgba(255,106,44,0.35);
+  --dot-red: #ff3b3b;      /* titik merah di judul "Playlist." */
   --radius: 12px;
   --stage-height: 420px;
 }
@@ -48,32 +49,26 @@ body{
 
 .page-header{
   text-align: center;
-  max-width: 640px;
-}
-
-.eyebrow{
-  display: inline-block;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 10px;
+  max-width: 560px;
 }
 
 .page-header h1{
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
-  font-size: clamp(26px, 5vw, 40px);
-  margin: 0 0 8px;
+  font-size: clamp(28px, 5vw, 42px);
+  margin: 0 0 10px;
   letter-spacing: -0.01em;
+}
+
+.brand-dot{
+  color: var(--dot-red);
 }
 
 .page-header p{
   margin: 0;
   color: var(--text-dim);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* ---------- Coverflow wrapper ---------- */
@@ -84,40 +79,13 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
 }
-
-.nav-btn{
-  flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--panel-border);
-  background: var(--panel);
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
-}
-
-.nav-btn:hover{
-  background: rgba(255,106,44,0.16);
-  border-color: var(--accent-soft);
-}
-
-.nav-btn:active{ transform: scale(0.92); }
-
-.nav-btn svg{ width: 20px; height: 20px; }
 
 /* ---------- Stage (3D perspective area) ---------- */
 
 .coverflow-stage{
   position: relative;
-  flex: 1 1 auto;
+  width: 100%;
   height: var(--stage-height);
   perspective: 1200px;
   perspective-origin: 50% 40%;
@@ -175,26 +143,7 @@ body{
   filter: brightness(1.05) saturate(1.05);
 }
 
-/* ---------- Caption ---------- */
-
-.caption{
-  text-align: center;
-  min-height: 78px;
-}
-
-.caption .index{
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  color: var(--text-dim);
-  letter-spacing: 0.12em;
-}
-
-.caption h2{
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(18px, 3vw, 24px);
-  margin: 4px 0 14px;
-  font-weight: 600;
-}
+/* ---------- Buka playlist ---------- */
 
 .open-link{
   display: inline-flex;
@@ -243,34 +192,14 @@ body{
   background: var(--accent);
 }
 
-/* ---------- Autoplay toggle ---------- */
-
-.autoplay-toggle{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text-dim);
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.autoplay-toggle svg{ width: 15px; height: 15px; }
-.autoplay-toggle:hover{ color: var(--text); }
-
 /* ---------- Responsive breakpoints ---------- */
 
 @media (max-width: 860px){
   :root{ --stage-height: 320px; }
-  .coverflow-wrap{ gap: 2px; }
-  .nav-btn{ width: 38px; height: 38px; }
 }
 
 @media (max-width: 520px){
   :root{ --stage-height: 250px; }
   body{ padding: 32px 12px 44px; gap: 20px; }
-  .nav-btn{ width: 34px; height: 34px; }
-  .nav-btn svg{ width: 16px; height: 16px; }
   .open-link{ padding: 9px 16px; font-size: 13px; }
 }
