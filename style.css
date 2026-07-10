@@ -36,7 +36,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar{
 
 body{
   min-height: 100vh;
-  min-height: 100dvh;            /* viewport dinamis: aman dari bar alamat iOS Safari */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,10 +99,6 @@ body{
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  /* penting untuk iOS Safari: tanpa ini, tombol memakai tampilan native
-     (kotak putih) dan menimpa styling kustom di atas */
-  -webkit-appearance: none;
-  appearance: none;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
@@ -118,8 +113,7 @@ body{
 }
 
 .nav-btn:active{ transform: translateY(-50%) scale(0.92); }
-.nav-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
-.nav-btn svg{ width: 20px; height: 20px; pointer-events: none; }
+.nav-btn svg{ width: 20px; height: 20px; }
 
 /* ---------- Stage (3D perspective area) ---------- */
 
@@ -145,64 +139,28 @@ body{
   position: absolute;
   top: 50%;
   left: 50%;
+  border-radius: var(--radius);
+  overflow: hidden;
   cursor: pointer;
   transform-style: preserve-3d;
-  transition: transform 0.42s cubic-bezier(0.22,0.68,0,1.05), opacity 0.35s ease;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+  transition: transform 0.55s cubic-bezier(0.22,0.68,0,1.05),
+              opacity 0.5s ease,
+              box-shadow 0.4s ease;
   will-change: transform;
 }
 
-/* sampul asli */
-.cover-face{
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
-  transition: box-shadow 0.4s ease;
-}
-
-.cover-face img{
+.cover-item img{
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: filter 0.35s ease;
+  transition: filter 0.4s ease;
+  -webkit-box-reflect: below 6px linear-gradient(to bottom, transparent 0%, transparent 55%, rgba(255,255,255,0.14) 100%);
 }
 
-.cover-item.active .cover-face{
+.cover-item.active{
   box-shadow: 0 26px 60px -8px var(--accent-soft), 0 14px 34px rgba(0,0,0,0.6);
-}
-
-/* pantulan di bawah sampul — dibuat manual (bukan -webkit-box-reflect)
-   supaya konsisten tampil di semua browser, termasuk iOS Safari, yang
-   punya masalah render pada kombinasi box-reflect + transform 3D. */
-.cover-reflection{
-  position: absolute;
-  left: 0;
-  top: 100%;
-  margin-top: 4px;
-  width: 100%;
-  height: 42%;
-  overflow: hidden;
-  border-radius: 0 0 var(--radius) var(--radius);
-  pointer-events: none;
-}
-
-.cover-reflection img{
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: bottom;
-  transform: scaleY(-1);
-  transition: filter 0.35s ease;
-}
-
-.cover-reflection::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--bg-1) 92%);
 }
 
 /* ---------- Buka playlist ---------- */
