@@ -3,22 +3,22 @@
    ========================================================= */
 
 const PLAYLISTS = [
-  { title: "Beatology", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd7q3i1dkOrfemfXD_wyti7H/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgiPkOnJBg&rs=AMzJL3kKir2o1CzEbHInRIZnTRfL3nsbMg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd7q3i1dkOrfemfXD_wyti7H&si=sHv7aqSaFDIWQKXK" },
-  { title: "Blus", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd7yJBv_a3KcMIAbQKu6s4N9/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjgkOnJBg&rs=AMzJL3n3v-_uZaCoLE6bgcaPwwm4Rw2WFQ", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd7yJBv_a3KcMIAbQKu6s4N9&si=k7OjJxbVJfRQ6hnU" },
-  { title: "Campur Es", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd4Kwy0uD1d4rZlrJM8mQwvZ/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjepOnJBg&rs=AMzJL3kVTlddjFfTeiOw0OiNN1j8RYqQxg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5JY8KUFKlyknmTUMiQpRx1&si=YmmMtYooJKVH8DBm" },
-  { title: "Classick", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd5WpepxMrcHLKarqaTQHxJB/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjBkenJBg&rs=AMzJL3l0fHAZ23Yx0Kl7qjs5te8A007Ucw", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5WpepxMrcHLKarqaTQHxJB&si=wDZcjxJJnR-ChOSC" },
-  { title: "Danska", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd5g4bVacOSw-3HvYfGaR6Be/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgiskunJBg&rs=AMzJL3lqDwJ0AwvDPMrX9btbeURXXctfTA", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5g4bVacOSw-3HvYfGaR6Be&si=oW624Xs8vNBGcszX" },
-  { title: "Indienesia", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd6ZHlgAazpmajE-0LkP07G8/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgj3kunJBg&rs=AMzJL3khWQsdpaigiuuMpb6Gx9Lf1ZKSDg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd6ZHlgAazpmajE-0LkP07G8&si=5AzVX20ZfMoTJdSS" },
-  { title: "Jukebox", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd4lAr9mD8gxanqbQqxrDQYc/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjSk-nJBg&rs=AMzJL3m1B6BnHo-_uCk8o9zVla9I4jW1tA", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd4lAr9mD8gxanqbQqxrDQYc&si=XVJ7jKyfAkZjtDCc" },
-  { title: "Karokoe", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd57jhcRepJxQDJxHc8-hCbW/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgiZlunJBg&rs=AMzJL3nHn67w2yfpj0TLYnsg3ni_za0kSQ", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd57jhcRepJxQDJxHc8-hCbW&si=3Q4G0xrFB3OBM7SK" },
-  { title: "Kroncong", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd6edphqz2lkbbuAuU0J7ygn/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjdlunJBg&rs=AMzJL3l5aF9kUliHXslFZ6tmJsNTGZ04wQ", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd6edphqz2lkbbuAuU0J7ygn&si=CEH_AVKxIKtN63ly" },
-  { title: "La France", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd4hyHrVnemEr5gTI5nfQK5A/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjVl-nJBg&rs=AMzJL3nDVu2J3EM6NB93m1SgMxXX_E8Iag", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd4hyHrVnemEr5gTI5nfQK5A&si=Hu0VWbSBhUCKCUtV" },
-  { title: "Lounge", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd5OugRH8gA6ioEOoPN4NK6K/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgiUmOnJBg&rs=AMzJL3lHnJk_TStZ0VXOAeAY9N1OlnqYrg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5OugRH8gA6ioEOoPN4NK6K&si=XWIjTsYCJzh36HH1" },
-  { title: "Reverie", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd5CxMRAN-Ign3bKHMN5RfbG/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjlmOnJBg&rs=AMzJL3kZ6Wvc9B8YPPzzJsBGDUxYEywtUw", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd5CxMRAN-Ign3bKHMN5RfbG&si=ZSH4LTEIDCdPr4hY" },
-  { title: "Seroja", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd794ryngGH0tSDKo-azLR_V/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgj7menJBg&rs=AMzJL3l7aqrzIFe0Nvti_QdGnw9SBIk20A", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd794ryngGH0tSDKo-azLR_V&si=VZtHjt75_uwKGnRt" },
-  { title: "Sitipop", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd6OMO2Zv9FvgrjOtdCHAaLv/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjWmunJBg&rs=AMzJL3kJU76XJM4-YXkzHKw75tjTx7Pkqg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd6OMO2Zv9FvgrjOtdCHAaLv&si=xJOzbiwbROLuLfYr" },
-  { title: "Uyeee", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd6_n1TRNiwTjU3F47JmMImY/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgiPpOnJBg&rs=AMzJL3kpJdvve6KPGctxT8CToeqtrvKyYw", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd6_n1TRNiwTjU3F47JmMImY&si=w47fxdoFG-Sml6Q7" },
-  { title: "Warnet", cover: "https://i.ytimg.com/pl_c/PLNX3yqsLvVd4Kwy0uD1d4rZlrJM8mQwvZ/studio_square_thumbnail.jpg?sqp=CJPOwtIG-oaymwEKCOIBEOIBIABIWqLzl_8DBgjepOnJBg&rs=AMzJL3kVTlddjFfTeiOw0OiNN1j8RYqQxg", link: "https://music.youtube.com/playlist?list=PLNX3yqsLvVd4Kwy0uD1d4rZlrJM8mQwvZ&si=eXGbjOD67PIHs8cx" },
+  { title: "Beatology",    cover: "images/beatology.png",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd7q3i1dkOrfemfXD_wyti7H" },
+  { title: "Blus",         cover: "images/blus.png",         link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd7yJBv_a3KcMIAbQKu6s4N9" },
+  { title: "Campur Es",    cover: "images/campur es.png",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5JY8KUFKlyknmTUMiQpRx1" },
+  { title: "Classick",     cover: "images/classick.png",     link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5WpepxMrcHLKarqaTQHxJB" },
+  { title: "Danska",       cover: "images/danska.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5g4bVacOSw-3HvYfGaR6Be" },
+  { title: "Indienesia",   cover: "images/indienesia.png",   link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6ZHlgAazpmajE-0LkP07G8" },
+  { title: "Jukebox",      cover: "images/jukebox.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4lAr9mD8gxanqbQqxrDQYc" },
+  { title: "Karokoe",      cover: "images/karokoe.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd57jhcRepJxQDJxHc8-hCbW" },
+  { title: "Kroncong",     cover: "images/kroncong.png",     link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6edphqz2lkbbuAuU0J7ygn" },
+  { title: "La France",    cover: "images/la france.png",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4hyHrVnemEr5gTI5nfQK5A" },
+  { title: "Lounge",       cover: "images/lounge.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5OugRH8gA6ioEOoPN4NK6K" },
+  { title: "Reverie",      cover: "images/reverie.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5CxMRAN-Ign3bKHMN5RfbG" },
+  { title: "Seroja",       cover: "images/seroja.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd794ryngGH0tSDKo-azLR_V" },
+  { title: "Sitipop",      cover: "images/sitipop.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6OMO2Zv9FvgrjOtdCHAaLv" },
+  { title: "Uyeee",        cover: "images/uyeee.png",        link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6_n1TRNiwTjU3F47JmMImY" },
+  { title: "Warnet",       cover: "images/warnet.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4Kwy0uD1d4rZlrJM8mQwvZ" },
 ];
 
 /* ========================================================= */
