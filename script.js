@@ -3,22 +3,22 @@
    ========================================================= */
 
 const PLAYLISTS = [
-  { title: "Beatology",    cover: "images/beatology.png",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd7q3i1dkOrfemfXD_wyti7H" },
-  { title: "Blus",         cover: "images/blus.png",         link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd7yJBv_a3KcMIAbQKu6s4N9" },
-  { title: "Campur Es",    cover: "images/campur es.png",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5JY8KUFKlyknmTUMiQpRx1" },
-  { title: "Classick",     cover: "images/classick.png",     link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5WpepxMrcHLKarqaTQHxJB" },
-  { title: "Danska",       cover: "images/danska.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5g4bVacOSw-3HvYfGaR6Be" },
-  { title: "Indienesia",   cover: "images/indienesia.png",   link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6ZHlgAazpmajE-0LkP07G8" },
-  { title: "Jukebox",      cover: "images/jukebox.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4lAr9mD8gxanqbQqxrDQYc" },
-  { title: "Karokoe",      cover: "images/karokoe.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd57jhcRepJxQDJxHc8-hCbW" },
-  { title: "Kroncong",     cover: "images/kroncong.png",     link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6edphqz2lkbbuAuU0J7ygn" },
-  { title: "La France",    cover: "images/la france.png",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4hyHrVnemEr5gTI5nfQK5A" },
-  { title: "Lounge",       cover: "images/lounge.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5OugRH8gA6ioEOoPN4NK6K" },
-  { title: "Reverie",      cover: "images/reverie.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5CxMRAN-Ign3bKHMN5RfbG" },
-  { title: "Seroja",       cover: "images/seroja.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd794ryngGH0tSDKo-azLR_V" },
-  { title: "Sitipop",      cover: "images/sitipop.png",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6OMO2Zv9FvgrjOtdCHAaLv" },
-  { title: "Uyeee",        cover: "images/uyeee.png",        link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6_n1TRNiwTjU3F47JmMImY" },
-  { title: "Warnet",       cover: "images/warnet.png",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4Kwy0uD1d4rZlrJM8mQwvZ" },
+  { title: "Beatology",    cover: "images/beatology.webp",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd7q3i1dkOrfemfXD_wyti7H" },
+  { title: "Blus",         cover: "images/blus.webp",         link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd7yJBv_a3KcMIAbQKu6s4N9" },
+  { title: "Campur Es",    cover: "images/campur-es.webp",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5JY8KUFKlyknmTUMiQpRx1" },
+  { title: "Classick",     cover: "images/classick.webp",     link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5WpepxMrcHLKarqaTQHxJB" },
+  { title: "Danska",       cover: "images/danska.webp",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5g4bVacOSw-3HvYfGaR6Be" },
+  { title: "Indienesia",   cover: "images/indienesia.webp",   link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6ZHlgAazpmajE-0LkP07G8" },
+  { title: "Jukebox",      cover: "images/jukebox.webp",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4lAr9mD8gxanqbQqxrDQYc" },
+  { title: "Karokoe",      cover: "images/karokoe.webp",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd57jhcRepJxQDJxHc8-hCbW" },
+  { title: "Kroncong",     cover: "images/kroncong.webp",     link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6edphqz2lkbbuAuU0J7ygn" },
+  { title: "La France",    cover: "images/la-france.webp",    link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4hyHrVnemEr5gTI5nfQK5A" },
+  { title: "Lounge",       cover: "images/lounge.webp",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5OugRH8gA6ioEOoPN4NK6K" },
+  { title: "Reverie",      cover: "images/reverie.webp",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd5CxMRAN-Ign3bKHMN5RfbG" },
+  { title: "Seroja",       cover: "images/seroja.webp",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd794ryngGH0tSDKo-azLR_V" },
+  { title: "Sitipop",      cover: "images/sitipop.webp",      link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6OMO2Zv9FvgrjOtdCHAaLv" },
+  { title: "Uyeee",        cover: "images/uyeee.webp",        link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd6_n1TRNiwTjU3F47JmMImY" },
+  { title: "Warnet",       cover: "images/warnet.webp",       link: "https://music.youtube.com/watch?list=PLNX3yqsLvVd4Kwy0uD1d4rZlrJM8mQwvZ" },
 ];
 
 /* ========================================================= */
