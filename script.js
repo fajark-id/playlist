@@ -31,12 +31,17 @@ const PLAYLISTS = [
   const nextBtn = document.getElementById("nextBtn");
 
   const n = PLAYLISTS.length;
-  let activeIndex = 0; // Default diatur ke index 0 (Beatology)
+  let activeIndex = 0; 
+
+  // Perbaikan Poin 1: Nonaktifkan double-tap zoom bawaan browser HP & seleksi teks yang mengganggu
+  document.documentElement.style.touchAction = "manipulation";
+  prevBtn.style.userSelect = "none";
+  nextBtn.style.userSelect = "none";
+  stage.style.userSelect = "none";
 
   function getConfig() {
     const w = window.innerWidth;
     if (w <= 520) {
-      // Sedikit di-tweak untuk HP agar spasi cover lebih rapi (berdasarkan screenshot)
       return { size: 160, offset: 75, step: 45, angle: 35, depth: 35, maxVisible: 2 };
     } else if (w <= 860) {
       return { size: 205, offset: 100, step: 58, angle: 38, depth: 40, maxVisible: 3 };
@@ -57,8 +62,10 @@ const PLAYLISTS = [
     img.draggable = false;
     el.appendChild(img);
 
-    el.addEventListener("click", () => {
-      if (i === activeIndex) {
+    el.addEventListener("click", (e) => {
+      // Jika user baru saja melakukan drag/geser, abaikan trigger click link internal
+      if (axisLock === "x") return;
+      if (i === Math.round(activeIndex)) {
         window.open(pl.link, "_blank", "noopener");
       } else {
         goTo(i);
@@ -76,12 +83,13 @@ const PLAYLISTS = [
     return diff;
   }
 
-  function render() {
+  // Perbaikan Poin 2: Menambahkan parameter isDragging untuk mematikan transisi secara dinamis
+  function render(isDragging = false) {
     items.forEach(({ el, img }, i) => {
       const diff = circularDiff(i, activeIndex);
       const abs = Math.abs(diff);
       const sign = Math.sign(diff);
-      const isActive = diff === 0;
+      const isActive = abs < 0.5; // Penyesuaian deteksi active saat nilai berupa float desimal
 
       el.style.width = cfg.size + "px";
       el.style.height = cfg.size + "px";
@@ -89,45 +97,43 @@ const PLAYLISTS = [
       el.style.marginTop = -cfg.size / 2 + "px";
 
       let tx, tz, rot, scale, overlayOp;
-      if (isActive) {
-        tx = 0; tz = 40; rot = 0; scale = 1;
-        overlayOp = 0; // Cover tengah terang sepenuhnya
-      } else {
-        tx = sign * (cfg.offset + (abs - 1) * cfg.step);
-        tz = -cfg.depth * abs;
-        rot = -sign * cfg.angle;
-        scale = Math.max(0.5, 1 - abs * 0.14);
-        
-        // Menambahkan opacity (kegelapan) berdasarkan jarak dari cover tengah. max 75% gelap.
-        overlayOp = Math.min(0.75, abs * 0.25); 
-      }
+      
+      // Rumus transformasi linear mulus mengikuti pergerakan jari desimal
+      tx = sign * (cfg.offset * Math.min(1, abs) + (Math.max(0, abs - 1)) * cfg.step);
+      tz = -cfg.depth * abs + (isActive ? (1 - abs * 2) * 40 : 0);
+      rot = -sign * cfg.angle * Math.min(1, abs);
+      scale = Math.max(0.5, 1 - abs * 0.14);
+      overlayOp = Math.min(0.75, abs * 0.25);
 
       const visible = abs <= cfg.maxVisible;
 
-      // Transformasi ruang 3D
-      el.style.transform = "translate3d(" + tx + "px, 0, " + tz + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
-      el.style.zIndex = (100 - abs).toString();
-      el.style.pointerEvents = visible ? "auto" : "none";
-      el.classList.toggle("active", isActive);
+      // Matikan transisi jika sedang digeser tangan agar sinkron 1:1 tanpa jeda animasi
+      if (isDragging) {
+        el.style.transition = "none";
+      } else {
+        el.style.transition = ""; 
+      }
 
-      // Selama masuk dalam maxVisible, cover 100% TIDAK TRANSPARAN (bisa dilihat).
-      // Cover yang diluar maxVisible disembunyikan sepenuhnya (opacity 0) agar tidak memberatkan DOM.
+      el.style.transform = "translate3d(" + tx + "px, 0, " + tz + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
+      el.style.zIndex = Math.round(100 - abs).toString();
+      el.style.pointerEvents = visible ? "auto" : "none";
+      el.classList.toggle("active", Math.round(activeIndex) === i);
+
       el.style.opacity = visible ? 1 : 0;
-      
-      // Inject nilai variabel CSS untuk mengontrol overlay hitam
       el.style.setProperty('--overlay-op', overlayOp);
     });
 
-    openLink.href = PLAYLISTS[activeIndex].link;
+    const currentRounded = Math.round(activeIndex);
+    openLink.href = PLAYLISTS[((currentRounded % n) + n) % n].link;
   }
 
   function goTo(i) {
     activeIndex = ((i % n) + n) % n;
-    render();
+    render(false);
   }
 
-  function next() { goTo(activeIndex + 1); }
-  function prev() { goTo(activeIndex - 1); }
+  function next() { goTo(Math.round(activeIndex) + 1); }
+  function prev() { goTo(Math.round(activeIndex) - 1); }
 
   prevBtn.addEventListener("click", prev);
   nextBtn.addEventListener("click", next);
@@ -137,37 +143,59 @@ const PLAYLISTS = [
     if (e.key === "ArrowRight") next();
   });
 
+  // Manajemen state pointer baru untuk Real-time Tracking
   let dragStartX = null;
   let dragStartY = null;
+  let baseIndex = 0;
   let axisLock = null;
+  let isDragging = false;
 
   stage.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
+    baseIndex = activeIndex;
+    isDragging = true;
     axisLock = null;
   });
 
-  stage.addEventListener("touchmove", (e) => {
-    if (dragStartX === null) return;
-    const t = e.touches[0];
-    const dx = t.clientX - dragStartX;
-    const dy = t.clientY - dragStartY;
+  window.addEventListener("pointermove", (e) => {
+    if (!isDragging || dragStartX === null) return;
+
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+
     if (axisLock === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
       axisLock = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
     }
-    if (axisLock === "x") e.preventDefault();
-  }, { passive: false });
+
+    if (axisLock === "x") {
+      // Sensitivitas pergeseran stack. Menggunakan basis ukuran cover terhitung.
+      const sensitivity = cfg.size * 1.5; 
+      let targetIndex = baseIndex - (dx / sensitivity);
+      
+      activeIndex = ((targetIndex % n) + n) % n;
+      render(true); // Render real-time dalam kondisi true (tanpa animasi css lag)
+    }
+  });
 
   window.addEventListener("pointerup", (e) => {
-    if (dragStartX === null) return;
-    const delta = e.clientX - dragStartX;
-    // Ambang batas swipe dikurangi (dari 40 -> 30) agar lebih peka di HP
-    if (axisLock !== "y" && Math.abs(delta) > 30) {
-      delta > 0 ? prev() : next();
+    if (!isDragging) return;
+    isDragging = false;
+
+    if (axisLock === "x") {
+      // Mengunci posisi cover secara otomatis ke index bulat terdekat saat jari lepas dari layar
+      let snappedIndex = Math.round(activeIndex);
+      goTo(snappedIndex);
+      
+      // Delay singkat untuk mereset deteksi sumbu geser agar tidak bentrok dengan klik link
+      setTimeout(() => { axisLock = null; }, 50);
+    } else {
+      render(false);
+      dragStartX = null;
+      dragStartY = null;
+      axisLock = null;
     }
-    dragStartX = null;
-    dragStartY = null;
-    axisLock = null;
   });
 
   let wheelLocked = false;
@@ -175,11 +203,9 @@ const PLAYLISTS = [
     e.preventDefault();
     if (wheelLocked) return;
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    // Sensitivitas scroll mouse diringankan (dari 8 -> 5)
     if (Math.abs(delta) < 5) return; 
     delta > 0 ? next() : prev();
     wheelLocked = true;
-    // Lock delay dipersingkat agar lebih responsif jika user scroll cepat
     setTimeout(() => { wheelLocked = false; }, 200); 
   }, { passive: false });
 
@@ -188,9 +214,9 @@ const PLAYLISTS = [
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       cfg = getConfig();
-      render();
+      render(false);
     }, 100);
   });
 
-  render();
+  render(false);
 })();
