@@ -33,7 +33,6 @@ const PLAYLISTS = [
   const n = PLAYLISTS.length;
   let activeIndex = 0; 
 
-  // Perbaikan Poin 1: Nonaktifkan double-tap zoom bawaan browser HP & seleksi teks yang mengganggu
   document.documentElement.style.touchAction = "manipulation";
   prevBtn.style.userSelect = "none";
   nextBtn.style.userSelect = "none";
@@ -62,8 +61,7 @@ const PLAYLISTS = [
     img.draggable = false;
     el.appendChild(img);
 
-    el.addEventListener("click", (e) => {
-      // Jika user baru saja melakukan drag/geser, abaikan trigger click link internal
+    el.addEventListener("click", () => {
       if (axisLock === "x") return;
       if (i === Math.round(activeIndex)) {
         window.open(pl.link, "_blank", "noopener");
@@ -83,13 +81,11 @@ const PLAYLISTS = [
     return diff;
   }
 
-  // Perbaikan Poin 2: Menambahkan parameter isDragging untuk mematikan transisi secara dinamis
   function render(isDragging = false) {
     items.forEach(({ el, img }, i) => {
       const diff = circularDiff(i, activeIndex);
       const abs = Math.abs(diff);
       const sign = Math.sign(diff);
-      const isActive = abs < 0.5; // Penyesuaian deteksi active saat nilai berupa float desimal
 
       el.style.width = cfg.size + "px";
       el.style.height = cfg.size + "px";
@@ -98,16 +94,19 @@ const PLAYLISTS = [
 
       let tx, tz, rot, scale, overlayOp;
       
-      // Rumus transformasi linear mulus mengikuti pergerakan jari desimal
+      // Menggunakan kurva parabola mulus (Math.pow) untuk mengangkat posisi Z cover aktif secara dramatis.
+      // Langkah ini mencegah cover samping "menembus" atau menyilang secara fisik di ruang 3D iPad/Safari.
+      const liftFactor = Math.max(0, 1 - abs);
+      const smoothLift = Math.pow(liftFactor, 2) * 60; 
+
       tx = sign * (cfg.offset * Math.min(1, abs) + (Math.max(0, abs - 1)) * cfg.step);
-      tz = -cfg.depth * abs + (isActive ? (1 - abs * 2) * 40 : 0);
+      tz = -cfg.depth * abs + smoothLift;
       rot = -sign * cfg.angle * Math.min(1, abs);
       scale = Math.max(0.5, 1 - abs * 0.14);
       overlayOp = Math.min(0.75, abs * 0.25);
 
       const visible = abs <= cfg.maxVisible;
 
-      // Matikan transisi jika sedang digeser tangan agar sinkron 1:1 tanpa jeda animasi
       if (isDragging) {
         el.style.transition = "none";
       } else {
@@ -115,7 +114,11 @@ const PLAYLISTS = [
       }
 
       el.style.transform = "translate3d(" + tx + "px, 0, " + tz + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
-      el.style.zIndex = Math.round(100 - abs).toString();
+      
+      // Fix Bug 3D Clipping: Menghitung tingkatan layer (zIndex) dengan presisi tinggi berbasis desimal float.
+      // Ini memastikan tidak ada 2 cover yang berbagi nomor layer yang sama persis saat masa transisi geser.
+      el.style.zIndex = Math.floor(10000 - abs * 1000).toString();
+      
       el.style.pointerEvents = visible ? "auto" : "none";
       el.classList.toggle("active", Math.round(activeIndex) === i);
 
@@ -143,7 +146,6 @@ const PLAYLISTS = [
     if (e.key === "ArrowRight") next();
   });
 
-  // Manajemen state pointer baru untuk Real-time Tracking
   let dragStartX = null;
   let dragStartY = null;
   let baseIndex = 0;
@@ -170,12 +172,13 @@ const PLAYLISTS = [
     }
 
     if (axisLock === "x") {
-      // Sensitivitas pergeseran stack. Menggunakan basis ukuran cover terhitung.
-      const sensitivity = cfg.size * 1.5; 
+      // Perbaikan Poin 1: Mengubah pengali sensitivitas menjadi jauh lebih kecil (0.5).
+      // Sekarang pergeseran tumpukan cover terasa sangat ringan dan tidak gampang membal balik (mental).
+      const sensitivity = cfg.size * 0.5; 
       let targetIndex = baseIndex - (dx / sensitivity);
       
       activeIndex = ((targetIndex % n) + n) % n;
-      render(true); // Render real-time dalam kondisi true (tanpa animasi css lag)
+      render(true); 
     }
   });
 
@@ -184,11 +187,8 @@ const PLAYLISTS = [
     isDragging = false;
 
     if (axisLock === "x") {
-      // Mengunci posisi cover secara otomatis ke index bulat terdekat saat jari lepas dari layar
       let snappedIndex = Math.round(activeIndex);
       goTo(snappedIndex);
-      
-      // Delay singkat untuk mereset deteksi sumbu geser agar tidak bentrok dengan klik link
       setTimeout(() => { axisLock = null; }, 50);
     } else {
       render(false);
